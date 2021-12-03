@@ -1,14 +1,14 @@
 import Register from './Register'
-import MetaTags from 'react-meta-tags'
+import { Helmet } from 'react-helmet'
 function App() {
   return (
     <>
-      <MetaTags>
+      <Helmet>
         <meta
           name='google-site-verification'
           content='hp2_JGOvzDyA94fKRLyXoxz8lelkKP8P6HkRvHGGHXg'
         />
-      </MetaTags>
+      </Helmet>
       <Register />
     </>
   )
