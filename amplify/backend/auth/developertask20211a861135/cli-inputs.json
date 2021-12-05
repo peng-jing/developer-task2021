@@ -41,13 +41,28 @@
     "usernameAttributes": [
       "email"
     ],
-    "hostedUIDomainName": "developertask20211a861135-1a861135",
-    "authProvidersUserPool": [],
-    "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://.dce71qcbvkrk7.amplifyapp.com/\",\"http://localhost:3000/\",\"https://register-task2021.netlify.app/\"],\"LogoutURLs\":[\"https://register-task2021.netlify.app/\",\"http://localhost:3000/\",\"https://.dce71qcbvkrk7.amplifyapp.com/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "hostedUIDomainName": "developertask2021f1b75ba0-f1b75ba0",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://main.dce71qcbvkrk7.amplifyapp.com/\",\"http://localhost:3000/\",\"https://register-task2021.netlify.app/\"],\"LogoutURLs\":[\"https://main.dce71qcbvkrk7.amplifyapp.com/\",\"http://localhost:3000/\",\"https://register-task2021.netlify.app/\"]}",
+    "authProviders": []
   }
 }
