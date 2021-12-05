@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Hub, Auth } from 'aws-amplify'
 import styled, { createGlobalStyle } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
@@ -188,6 +189,24 @@ const LoginBtn = styled.div`
 `
 
 export default function Register() {
+  const [user, setUser] = useState(null)
+  async function getUser() {
+    try {
+      const token = await Auth.currentAuthenticatedUser()
+      setUser(token)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  async function getUser() {
+    try {
+      const token = await Auth.currentAuthenticatedUser()
+
+      setUser(token)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <>
       <GlobalStyle />
@@ -201,7 +220,9 @@ export default function Register() {
           <SubTitle children={'Start from free'} />
           <Title children={'Create an account'} />
           <SocialRegister>
-            <SocialBtn $color>
+            <SocialBtn
+              onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
+            >
               <FontAwesomeIcon
                 icon={['fab', 'google']}
                 className='fa-icon'
@@ -210,7 +231,9 @@ export default function Register() {
               />
               <span>Sign up with Google</span>
             </SocialBtn>
-            <SocialBtn>
+            <SocialBtn
+              onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}
+            >
               <FontAwesomeIcon
                 icon={['fab', 'facebook-f']}
                 className='fa-icon'
