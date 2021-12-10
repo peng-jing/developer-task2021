@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Hub, Auth } from 'aws-amplify'
+import React, { useState } from 'react'
+import { Auth } from 'aws-amplify'
 import styled, { createGlobalStyle } from 'styled-components'
+import { useForm } from 'react-hook-form'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
@@ -76,7 +77,7 @@ const SocialRegister = styled.div`
   justify-content: space-between;
   margin-top: 20px;
   & div + div {
-    margin-left: 20px;
+    margin-left: 15px;
   }
   @media screen and (max-width: 360px) {
     & div + div {
@@ -133,7 +134,7 @@ const UserName = styled.div`
   display: flex;
   justify-content: space-between;
   & div + div {
-    margin-left: 20px;
+    margin-left: 15px;
   }
   @media screen and (max-width: 360px) {
     & div + div {
@@ -187,7 +188,8 @@ const Password = styled.div`
   top: 60%;
   left: 2.76%;
 `
-const SubmitBtn = styled.div`
+const SubmitBtn = styled.button`
+  border: none;
   background: #3c71ff;
   color: #ffffff;
   width: 100%;
@@ -259,11 +261,12 @@ const CheckInput = styled.input`
   margin: 0;
   font: inherit;
   color: currentColor;
+  border: 1px solid #ababab;
   background: #ababab;
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  transform: translateY(30%);
+  transform: translateY(35%);
   display: grid;
   place-content: center;
   &:before {
@@ -285,21 +288,48 @@ const CheckInput = styled.input`
     transform: scale(2.5);
   }
 `
+
 export default function Register() {
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   const [password, setpassword] = useState('')
   const [starPassword, setStarPassword] = useState('')
   const [isVisible, setIsVisible] = useState(false)
   const [typeIsPassword, setTypeIsPassword] = useState(false)
   const [keyCode, setKeyCode] = useState('')
-  async function getUser() {
+  // const [errMessage, setErrMessage] = useState()
+  async function signUp(username, firstName, lastName, email, password) {
     try {
-      const token = await Auth.currentAuthenticatedUser()
-      setUser(token)
-    } catch (err) {
-      console.log(err)
+      const { user } = await Auth.signUp({
+        username,
+        firstName,
+        lastName,
+        password,
+        attributes: {
+          email
+        }
+      })
+      console.log(user)
+    } catch (error) {
+      console.log('error signing up:', error)
     }
   }
+  const { register, handleSubmit } = useForm()
+
+  const onSubmit = (submitData) => {
+    // setErrMessage(null)
+    if (!/[0-9]/.test(password)) {
+      return
+    }
+    const { firstName, lastName, email } = submitData
+    signUp(email, firstName, lastName, email, password)
+  }
+
+  // useEffect(() => {
+  //   if (error) {
+  //     setErrMessage('該帳號或信箱已被註冊')
+  //     console.log(error)
+  //   }
+  // }, [error])
 
   const handleKeyDown = (e) => {
     setTypeIsPassword(false)
@@ -360,22 +390,37 @@ export default function Register() {
             </SocialBtn>
           </SocialRegister>
 
-          <EmailRegister>
+          <EmailRegister onSubmit={handleSubmit(onSubmit)}>
             <TitleWrapper>
               <EmailTitle children={'Or use your email for registration'} />
             </TitleWrapper>
             <UserName>
               <InputWrapper>
-                <Input placeholder='First Name' type='text' />
+                <Input
+                  placeholder='First Name'
+                  type='text'
+                  {...register('firstName')}
+                  required='required'
+                />
                 <InputTitle children='First Name' />
               </InputWrapper>
               <InputWrapper>
-                <Input placeholder='Last Name' type='text' />
+                <Input
+                  placeholder='Last Name'
+                  type='text'
+                  {...register('lastName')}
+                  required='required'
+                />
                 <InputTitle children='Last Name' />
               </InputWrapper>
             </UserName>
             <InputWrapper>
-              <Input placeholder='Email' type='email' />
+              <Input
+                placeholder='Email'
+                type='email'
+                {...register('email')}
+                required='required'
+              />
               <InputTitle children='Email' />
             </InputWrapper>
             <InputWrapper>
@@ -394,6 +439,8 @@ export default function Register() {
                   e.preventDefault()
                   return false
                 }}
+                required='required'
+                pattern='.{8,}'
               />
               <InputTitle children='Password' />
               {isVisible && <Password children={password} />}
@@ -403,7 +450,6 @@ export default function Register() {
                 onClick={handleVisible}
               />
             </InputWrapper>
-
             <PasswordCheckWrapper $active={password}>
               <FontAwesomeIcon
                 icon={faCheckCircle}
@@ -424,7 +470,7 @@ export default function Register() {
             </PasswordCheckWrapper>
 
             <CheckLabel>
-              <CheckInput type='checkbox' />
+              <CheckInput type='checkbox' required='required' />
               By creating account, you agree to accept our Privacy Policy, Terms
               of Service and Notification settings.
             </CheckLabel>
